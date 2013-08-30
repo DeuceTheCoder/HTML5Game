@@ -10,3 +10,11 @@ function Sprite(context, imageSource) {
 Sprite.prototype.draw = function(position) {
     this.context.drawImage(this.image, position.getX(), position.getY());
 };
+
+Sprite.prototype.getWidth = function() {
+    return this.image.width;
+};
+
+Sprite.prototype.getHeight = function() {
+    return this.image.height;
+};

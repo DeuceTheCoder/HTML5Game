@@ -7,15 +7,15 @@ game.context = game.canvas.getContext('2d');
 
 game.cursor = new Vector2d(200, 100);
 game.oldCursor = new Vector2d(200, 100);
-game.mario = new Entity2d(new Vector2d(200, 100), new Sprite(game.context, 'http://www.dan-dare.org/Dan%20Mario/SMB1MarioSmallAni.gif'));
+game.mario = new Entity2d(new Vector2d(200, 100),
+                    new Sprite(game.context, 'http://www.dan-dare.org/Dan%20Mario/SMB1MarioSmallAni.gif'),
+                    game.canvas);
 
 (function (window) {
     function gameLoop() {
-        game.context.clearRect(0, 0, 400, 200);
-        game.context.beginPath();
-        game.context.moveTo(game.oldCursor.getX(), game.oldCursor.getY());
-        game.context.lineTo(game.cursor.getX(), game.cursor.getY());
-        game.context.stroke();
+        game.context.fillStyle = "orange";
+        game.context.rect(0, 0, 400, 200);
+        game.context.fill();
         game.mario.draw();
     }
     window.setInterval(gameLoop, 1000 / 60); // 60fps

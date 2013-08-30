@@ -1,8 +1,9 @@
 "use strict";
 
-function Entity2d(position, sprite) {
+function Entity2d(position, sprite, canvas) {
     this.position = position;
     this.sprite = sprite;
+    this.canvas = canvas;
     this.step = 5;
 }
 
@@ -19,18 +20,26 @@ Entity2d.prototype.getY = function() {
 };
 
 Entity2d.prototype.moveLeft = function() {
-    return this.position.addX(-this.step);
+    if (this.getX() > 0) {
+        return this.position.addX(-this.step);
+    }
 };
 
 Entity2d.prototype.moveRight = function() {
-    return this.position.addX(this.step);
+    if (this.getX() < (this.canvas.width - this.sprite.getWidth())) {
+       return this.position.addX(this.step);
+    }
 };
 
 Entity2d.prototype.moveUp = function() {
-    return this.position.addY(-this.step);
+    if(this.getY() > 0) {
+        return this.position.addY(-this.step);
+    }
 };
 
 Entity2d.prototype.moveDown = function() {
-    return this.position.addY(this.step);
+    if (this.getY() < (this.canvas.height - this.sprite.getHeight())) {
+        return this.position.addY(this.step);
+    }
 };
 
