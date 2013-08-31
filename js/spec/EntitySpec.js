@@ -1,57 +1,79 @@
 describe("Entity2d", function () {
     var entity;
-    var position;
     var sprite;
-    var canvas;
+    var initialX;
+    var initialY;
+    var initialPosition;
 
     beforeEach(function () {
-        position = jasmine.createSpyObj('vector2d', ['getX', 'getY', 'addX', 'addY']);
         sprite = jasmine.createSpyObj('sprite', ['draw', 'getWidth', 'getHeight']);
         sprite.getWidth.andReturn(5);
         sprite.getHeight.andReturn(5);
 
-        canvas = {width: 400, height: 200};
-        entity = new Entity2d(position, sprite, canvas);
+        initialX = 0;
+        initialY = 0;
+        initialPosition = new Vector2d(initialX, initialY);
+        entity = new Entity2d(initialPosition, sprite);
     });
 
     it("should draw its sprite", function () {
         entity.draw();
-        expect(sprite.draw).toHaveBeenCalledWith(position);
+        expect(sprite.draw).toHaveBeenCalledWith(initialPosition);
     });
 
     it("should not be able to move beyond the rightmost boundary", function() {
-        var initialX = canvas.width - sprite.getWidth();
-        var rightEdge = new Vector2d(initialX, 100);
-        var entity = new Entity2d(rightEdge, sprite, canvas);
+        var rightEdge = sprite.getWidth();
+        entity.moveRight(rightEdge);
 
-        entity.moveRight();
-        expect(entity.getX()).toEqual(initialX);
+        expect(entity.getX()).toEqual(initialPosition.getX());
+    });
+
+    it("should be able to move right if not at boundary", function() {
+        var rightEdge = 100;
+        entity.moveRight(rightEdge);
+
+        expect(entity.getX()).toEqual(initialX + entity.step);
     });
 
     it("should not be able to move beyond the leftmost boundary", function() {
-        var initialX = 0;
-        var leftEdge = new Vector2d(initialX, 100);
-        var entity = new Entity2d(leftEdge, sprite, canvas);
+        var leftEdge = 0;
 
-        entity.moveLeft();
+        entity.moveLeft(leftEdge);
         expect(entity.getX()).toEqual(initialX);
     });
 
-    it("should not be able to move beyond the topmost boundary", function() {
-        var initialY = 0;
-        var topEdge = new Vector2d(100, initialY);
-        var entity = new Entity2d(topEdge, sprite, canvas);
+    it("should be able to move left if not at boundary", function() {
+        var leftEdge = -10;
 
-        entity.moveUp();
-        expect(entity.getY()).toEqual(initialY);
+        entity.moveLeft(leftEdge);
+        expect(entity.getX()).toEqual(initialX - entity.step);
     });
 
     it("should not be able to move beyond the bottommost boundary", function() {
-        var initialY = canvas.height - sprite.getHeight();
-        var bottomEdge = new Vector2d(100, initialY);
-        var entity = new Entity2d(bottomEdge, sprite, canvas);
+        var bottomEdge = sprite.getHeight();
+        entity.moveDown(bottomEdge);
 
-        entity.moveDown();
         expect(entity.getY()).toEqual(initialY);
+    });
+
+    it("should be able to move down if not at boundary", function() {
+        var bottomEdge = 100;
+        entity.moveDown(bottomEdge);
+
+        expect(entity.getY()).toEqual(initialY + entity.step);
+    });
+
+    it("should not be able to move beyond the topmost boundary", function() {
+        var topEdge = 0;
+
+        entity.moveUp(topEdge);
+        expect(entity.getY()).toEqual(initialY);
+    });
+
+    it("should be able to move up if not at boundary", function() {
+        var topEdge = -10;
+
+        entity.moveUp(topEdge);
+        expect(entity.getY()).toEqual(initialY - entity.step);
     });
 });

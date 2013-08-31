@@ -8,8 +8,7 @@ game.context = game.canvas.getContext('2d');
 game.cursor = new Vector2d(200, 100);
 game.oldCursor = new Vector2d(200, 100);
 game.mario = new Entity2d(new Vector2d(200, 100),
-                    new Sprite(game.context, 'http://www.dan-dare.org/Dan%20Mario/SMB1MarioSmallAni.gif'),
-                    game.canvas);
+                    new Sprite(game.context, 'http://www.dan-dare.org/Dan%20Mario/SMB1MarioSmallAni.gif'));
 
 (function (window) {
     function gameLoop() {
@@ -22,24 +21,10 @@ game.mario = new Entity2d(new Vector2d(200, 100),
 }(window));
 
 $(document.body).on('keydown', function (event) {
-    var leftArrow = 37;
-    var upArrow = 38;
-    var rightArrow = 39;
-    var downArrow = 40;
-    switch (event.which) {
-        case  leftArrow:
-            game.mario.moveLeft();
-            break;
-        case  upArrow:
-            game.mario.moveUp();
-            break;
-        case  rightArrow:
-            game.mario.moveRight();
-            break;
-        case  downArrow:
-            game.mario.moveDown();
-            break;
-    }
+    var boundaryMap = {37: 0, 38: 0, 39: game.canvas.width, 40: game.canvas.height};
+    var movementMap = {37: game.mario.moveLeft, 38: game.mario.moveUp,
+                    39: game.mario.moveRight, 40: game.mario.moveDown};
+    movementMap[event.which].call(game.mario, boundaryMap[event.which]);
 });
 
 game.canvas.addEventListener('click', function (event) {
